@@ -22,4 +22,4 @@ django-admin-rangefilter
 django-redis
 packaging
 https://github.com/digi604/django-smart-selects/archive/master.zip
-#mysqlclient
+mysqlclient

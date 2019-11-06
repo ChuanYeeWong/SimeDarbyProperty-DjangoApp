@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4ef4+af)ifk#vgvk&055^djs(4jml-h3@q1$k(hcqb)u9t@n7i'
+SECRET_KEY = os.environ.get('SECRET_KEY','4ef4+af)ifk#vgvk&055^djs(4jml-h3@q1$k(hcqb)u9t@n7i')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG',True)
 
 ALLOWED_HOSTS = ['*']
 
@@ -100,22 +100,26 @@ WSGI_APPLICATION = 'simedarby.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
-#DATABASES = {
-    #'default': {
-        #'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
-        #'NAME': 'simedarby', #local: libraries #server: 
-        #'USER': 'root', #root #root
-        #'PASSWORD': 'password', #local: root #server: 
-        #'HOST': 'localhost', #local: localhost  #server:
-        #'PORT': '3306',
-    #}
-#}
-DATABASES = {
+if(DEBUG):
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
+            'NAME': os.environ['MYSQL_DBNAME'], #local: libraries #server: 
+            'USER': os.environ['MYSQL_USERNAME'], #root #root
+            'PASSWORD': os.environ['MYSQL_PASSWORD'], #local: root #server: 
+            'HOST': os.environ['MYSQL_HOSTNAME'], #local: localhost  #server:
+            'PORT': '3306',
+        }
+    }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -195,7 +199,7 @@ JWT_AUTH = {
     'JWT_ALGORITHM': 'HS256',
     'JWT_ALLOW_REFRESH': True,
 }
-STATIC_ROOT = os.environ.get('STATIC_PATH',"./static/")
+STATIC_ROOT = os.environ.get('STATIC_PATH',"./static_files/")
 
 STATICFILES_DIRS = [
     
