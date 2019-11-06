@@ -198,7 +198,8 @@ JWT_AUTH = {
 STATIC_ROOT = os.path.join(BASE_DIR,'/static_files/')
 
 STATICFILES_DIRS = [
-    "./static/", 
+    
+    os.environ.get('STATIC_PATH',"./static/"), 
 ]
 #email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -207,7 +208,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'simedarbyvms8@gmail.com'
 EMAIL_HOST_PASSWORD = 'simedarby112211'
 EMAIL_PORT = 587
-MEDIA_URL = '/media/'
+MEDIA_URL = os.environ.get('MEDIA_PATH',"./media/")
 MEDIA_ROOT = os.path.join(BASE_DIR,'./media_storage/')
 PASSWORD_RESET_TIMEOUT_DAYS = 0.5
 CORS_ORIGIN_ALLOW_ALL = True
