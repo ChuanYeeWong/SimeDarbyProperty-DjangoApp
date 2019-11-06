@@ -1,0 +1,19 @@
+<div class="dashboard-item-content" style="height: auto;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Community</th>
+                <th>Total Areas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in module.community %}
+
+            <tr>
+                <th><a href="{% url 'admin:residents_community_change' c.id %}">{{ c.name }} </a></th>
+                <td width="1" align="center">{{ c.area_set.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

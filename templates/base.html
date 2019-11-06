@@ -1,0 +1,96 @@
+{% load static %}
+<html>
+
+<head>
+   <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'smart-selects/admin/js/chainedfk.js' %}"></script>
+<script type="text/javascript" src="{% static 'smart-selects/admin/js/chainedm2m.js' %}"></script>
+<script type="text/javascript" src="{% static 'smart-selects/admin/js/bindfields.js' %}"></script>
+</head>
+
+<body>
+    <!------ Include the above in your HEAD tag ---------->
+    <div class="card">
+       <!-- <div class="sidenav">
+            <div class="login-main">
+                
+            </div>
+        </div>-->
+        <div class="main">
+            <div>
+
+            </div>
+            <div class="login-main-text ">
+            <div class="text-center">
+                <img width="20%" src="{% static 'ivms/img/simedarby-logo_blk.svg' %}">
+            </div>
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<style>
+    body {
+        font-family: "Lato", sans-serif;
+    }
+
+
+
+
+    .main-head {
+        height: 150px;
+        background: #FFF;
+
+    }
+
+    .sidenav {
+        height: 100%;
+        background:url({% static 'ivms/img/gallery-glades.jpg'%});
+        background-size: cover;
+        background-position: center;
+        overflow-x: hidden;
+        padding-top: 20px;
+        width: 40%;
+        position: relative;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        display: inline-block;
+    }
+
+
+    .main {
+        padding: 0px 10px;
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        min-height: 100%;
+        padding:20px!important;
+        box-sizing:border-box;
+    }
+
+    .login-main-text {
+        position: relative;
+        width:100%;
+        height:100%;
+    }
+
+
+
+    .login-main {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
