@@ -195,7 +195,7 @@ JWT_AUTH = {
     'JWT_ALGORITHM': 'HS256',
     'JWT_ALLOW_REFRESH': True,
 }
-STATIC_ROOT = os.path.join(BASE_DIR,'/static_files/')
+STATIC_ROOT = os.path.join(BASE_DIR,'/static/')
 
 STATICFILES_DIRS = [
     
