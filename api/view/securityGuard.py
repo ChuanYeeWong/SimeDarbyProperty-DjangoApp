@@ -1,6 +1,6 @@
-from django.shortcuts import render,get_list_or_404
+from django.shortcuts import render,get_list_or_404,get_object_or_404
 from django.contrib.auth import get_user_model
-from residents.models import Lot,Community,Area,Street,Resident
+from residents.models import Lot,Community,Area,Street,Resident,ResidentLotThroughModel
 from ivms.models import IPCamera,Boomgate
 from django.utils import timezone
 from rest_framework import generics,viewsets,status
@@ -14,16 +14,25 @@ from rest_framework_jwt.settings import api_settings
 from security_guards.models import ReasonSetting,PassNumber,DeviceNumber,Security,BoomgateLog
 from drf_yasg.utils import swagger_auto_schema
 from api.serializer import securityGuard,resident
-class GetPrimaryViewSet(viewsets.ReadOnlyModelViewSet):
+from rest_framework.decorators import action
+class GetPrimaryViewSet(viewsets.GenericViewSet):
     """
     Get Primary User By House Lot.
     """
-    paginate_by = None  # Note this guy right here
-    queryset = Lot.objects.all()
     serializer_class = securityGuard.GetPrimarySerializer
     def get_queryset(self):
-        return Lot.objects.filter(street__area=self.request.user.area)
-
+        return Lot.objects.all()
+    def list(self,request):
+        queryset = self.get_queryset()
+        resident = get_list_or_404(queryset,street__area=self.request.user.area)
+        serializer = securityGuard.GetPrimarySerializer(resident,context={'request': request},many=True)
+        return Response(serializer.data)
+    @action(detail=False, methods=['get'],serializer_class=securityGuard.ResidentLotThroughModelSerializer)
+    def family(self,request):
+        queryset = ResidentLotThroughModel.objects.all()
+        resident = get_list_or_404(queryset,lot_id= self.request.query_params.get('id', None))
+        serializer = securityGuard.ResidentLotThroughModelSerializer(resident,context={'request': request},many=True)
+        return Response(serializer.data)
 class SJSONWebTokenAPIView(APIView):
     """
     Base API View that various JWT interactions inherit from.
