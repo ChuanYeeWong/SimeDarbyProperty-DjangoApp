@@ -205,6 +205,6 @@ class EntryScheduleViewSet(viewsets.GenericViewSet):
         return Response(response_data, status=status.HTTP_200_OK)
     @action(detail=False, methods=['get'],serializer_class=visitor.EntryScheduleSerializer)
     def sec_upcoming(self,request):
-        queryset = Entry_Schedule.objects.filter(lot__street__area =self.request.user.area ,start_date__gt = datetime.date.today(),is_active=True).order_by('-id')
+        queryset = Entry_Schedule.objects.filter(lot__street__area =self.request.user.area ,start_date__gt = datetime.now().date(),is_active=True).order_by('-id')
         serializer = visitor.EntryScheduleSerializer(queryset,context={'request': request},many=True)
         return Response(serializer.data)
