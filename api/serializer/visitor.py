@@ -84,8 +84,7 @@ class TrackEntrySerializer(serializers.ModelSerializer):
     def get_phone_number(self, obj):
         if obj.resident :
             res = Resident.objects.get(id=obj.resident.id)
-            serializer = ProfileSerializer(instance=res.user)
-            return serializer.data['phone_number']
+            return str(res.user.profile.phone_number)
         else:
             return None
     def get_resident_name(self, obj):
@@ -142,10 +141,17 @@ class EntryScheduleSerializer(serializers.ModelSerializer):
     community = serializers.SerializerMethodField()
     area = serializers.SerializerMethodField()
     street = serializers.SerializerMethodField()
+    lot_name = serializers.SerializerMethodField()
     def get_area_name(self, obj):
         if obj.resident :
             res = Lot.objects.get(id=obj.lot.id)
             return res.street.area.name
+        else:
+            return None
+    def get_lot_name(self,obj):
+        if obj.resident :
+            res = Lot.objects.get(id=obj.lot.id)
+            return res.name
         else:
             return None
     def get_street_name(self, obj):
@@ -191,6 +197,7 @@ class EntryScheduleSerializer(serializers.ModelSerializer):
             'area_name',
             'street_name',
             'community',
+            'lot_name',
             'area',
             'street',
         )

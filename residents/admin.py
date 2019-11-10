@@ -110,33 +110,37 @@ class RequestAdmin(admin.ModelAdmin):
     def send_email(self,status,obj,request):
         if status == 'A':
             obj.is_active = False
-            user = get_user_model().objects.create_user(
-                email=obj.email,
-                first_name=obj.first_name,
-                last_name=obj.last_name,
-                password=get_user_model().objects.make_random_password(),
-                is_active = False,
+            try:
+                user = get_user_model().objects.get(email=obj.email)
+                r = Resident.objects.get(user_id=user.id)
+            except (get_user_model().DoesNotExist, Resident.DoesNotExist) as e:
+                user = get_user_model().objects.create_user(
+                    email=obj.email,
+                    first_name=obj.first_name,
+                    last_name=obj.last_name,
+                    password=get_user_model().objects.make_random_password(),
+                    is_active = False,
+                    )
+                p = Profile.objects.create(user=user,phone_number=obj.phone_number,community=obj.community)
+                r = Resident.objects.create(user=user)
+                current_site = get_current_site(request)
+                mail_subject = 'Account Verification'
+                message = loader.get_template(
+                'emails/activateAccount.html').render(
+                {
+                    'name': user.first_name,
+                    'domain': current_site.domain,
+                    'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token':account_activation_token.make_token(user),
+                }
                 )
-            p = Profile.objects.create(user=user,phone_number=obj.phone_number,community=obj.community)
-            r = Resident.objects.create(user=user)
+                to_email = obj.email
+                email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+                )
+                email.content_subtype = 'html'
+                email.send()
             rl = ResidentLotThroughModel.objects.create(resident=r,lot=obj.lot)
-            current_site = get_current_site(request)
-            mail_subject = 'Account Verification'
-            message = loader.get_template(
-            'emails/activateAccount.html').render(
-            {
-                'name': user.first_name,
-                'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':account_activation_token.make_token(user),
-            }
-            )
-            to_email = obj.email
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.content_subtype = 'html'
-            email.send()
             obj.save()  
 @admin.register(RequestFamily)
 class RequestFamilyAdmin(admin.ModelAdmin):

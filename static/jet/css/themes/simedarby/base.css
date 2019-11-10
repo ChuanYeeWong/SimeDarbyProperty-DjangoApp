@@ -4654,7 +4654,7 @@ ul.messagelist li {
   }
 }
 ul.messagelist li.success {
-  background: #2d9fd8;
+  background: #7fc97d;
   color: #fff;
 }
 ul.messagelist li.warning, ul.messagelist li.error {

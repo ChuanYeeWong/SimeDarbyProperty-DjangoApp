@@ -24,7 +24,7 @@ class TrackEntryViewSet(viewsets.GenericViewSet):
             queryset = queryset.filter(Q(entry_type='W')|Q(entry_type='I'))
         if types is not None and types == "EMS":
             queryset = queryset.filter(Q(entry_type='E')|Q(entry_type='M')|Q(entry_type='S'))
-        return queryset
+        return queryset.order_by('-updated_at')
     def list (self,request):
         queryset = self.filter_queryset(self.get_queryset());
         serializer = visitor.TrackEntrySerializer(queryset,context={'request': request},many=True)

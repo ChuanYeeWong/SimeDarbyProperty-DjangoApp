@@ -116,6 +116,11 @@ else:
             'PASSWORD': os.environ['MYSQL_PASSWORD'], #local: root #server: 
             'HOST': os.environ['MYSQL_HOSTNAME'], #local: localhost  #server:
             'PORT': '3306',
+            'OPTIONS': {
+                'ssl': {
+                    'cert':'/static/BaltimoreCyberTrustRoot.crt.pem' ,
+                }
+            },
         }
     }
 

@@ -7,7 +7,7 @@ from django.core.validators import FileExtensionValidator
 # Create your models here.
 class Announcement(models.Model):
     title = models.CharField(max_length=50,help_text="Not more than 50 characters.")
-    thumbnail = models.ImageField(upload_to='announcement/',validators=[FileExtensionValidator(['jpg','png'])])
+    thumbnail = models.ImageField(upload_to='announcement/',validators=[FileExtensionValidator(['jpg','png','jpeg'])])
     body = HTMLField()
     publish_datetime = models.DateTimeField('Publish Date/Time')
     community = models.ForeignKey(Community,on_delete=models.CASCADE)
