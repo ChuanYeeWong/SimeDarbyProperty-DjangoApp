@@ -11,7 +11,6 @@ from datetime import datetime
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from django.db.models import Q
-import datetime
 class TrackEntryViewSet(viewsets.GenericViewSet):
     serializer_class = visitor.TrackEntryFormSerializer
     permission_classes = [AllowAny]
