@@ -18,8 +18,12 @@ class GetPrimaryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Get Primary User By House Lot.
     """
+    paginate_by = None  # Note this guy right here
     queryset = Lot.objects.all()
     serializer_class = securityGuard.GetPrimarySerializer
+    def get_queryset(self):
+        return Lot.objects.filter(street__area=self.request.user.area)
+
 class SJSONWebTokenAPIView(APIView):
     """
     Base API View that various JWT interactions inherit from.

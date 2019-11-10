@@ -107,6 +107,7 @@ class GetPrimarySerializer(serializers.ModelSerializer):
         model = Lot
         fields = (
             'street',
+            'id',
             'name',
             'resident',
         )
