@@ -55,7 +55,7 @@ class ResidentInline(OrderedStackedInline):
 class LotAdmin(OrderedInlineModelAdminMixin, DefaultInline):
     search_fields = ('name', )
     inlines = [ResidentInline]
-    list_display = ('__str__','community','area',)
+    list_display = ('__str__','community','area','is_lock')
     list_filter = ('street__area__community', )
     def community(self, obj):
         return obj.street.area.community
