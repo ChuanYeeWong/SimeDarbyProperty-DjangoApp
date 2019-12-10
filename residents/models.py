@@ -64,7 +64,7 @@ class Request(models.Model):
     email = models.EmailField()
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
-    phone_number = PhoneNumberField(null=True,blank=True,)
+    phone_number = PhoneNumberField()
     status = models.CharField(max_length=1, choices=STATUS, default='P')
     slip = models.ImageField("Certificate of Ownership",upload_to='images/')
     community =  models.ForeignKey(Community,on_delete=models.CASCADE)
@@ -83,8 +83,8 @@ class Request(models.Model):
         show_all=False,
         auto_choose=False,
         sort=True)
-    confirm = models.BooleanField("I confirm that the information given in this form is true, complete and accurate.")
-    tou = models.BooleanField("I have read and agree to the <a href='#'>Privacy Policy</a>")
+    confirm = models.BooleanField("I confirm that the information given in this form is true, complete and accurate.",default=False)
+    tou = models.BooleanField("I have read and agree to the <a href='/static/ivms/file/PDPA.pdf'>Privacy Policy</a>",default=False)
     class Meta:
         verbose_name = "Resident's Request"
         verbose_name_plural = "Resident's Requests"

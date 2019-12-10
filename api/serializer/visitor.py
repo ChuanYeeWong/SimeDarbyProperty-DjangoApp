@@ -128,10 +128,12 @@ class TrackUpdateStatusSerializer(serializers.ModelSerializer):
             'exit_car_plate_image',
         )
 class QRSerializer(serializers.ModelSerializer):
+    area_id = serializers.IntegerField(required=False)
     class Meta:
         model = Entry_Schedule
         fields = (
             'qr_uuid',
+            'area_id',
         )
       
 

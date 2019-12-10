@@ -41,7 +41,7 @@ class ConfirmForm(forms.Form):
     class Meta:
         fields = ('agree',)
 class RequestForm(forms.ModelForm):
-    class Meta:
+    class Meta: 
         model =  Request
         exclude = ('status',)
     def clean_confirm(self):
@@ -55,7 +55,7 @@ class RequestForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email', False)
         if email:
-            exist = Request.objects.filter(email=email)
+            exist = Request.objects.filter(email=email).filter(status="A").filter(status="R").filter(status="P")
             if exist:
                 raise forms.ValidationError('Email address already registered.')
         else:

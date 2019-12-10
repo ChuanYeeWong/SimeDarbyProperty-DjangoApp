@@ -59,6 +59,18 @@ class ResidentViewSet(viewsets.GenericViewSet):
         r.save()
         response_data = {'status':'success'}
         return Response(response_data, status=status.HTTP_200_OK)
+    @action(detail=False, methods=['post'],serializer_class=resident.RemoveLot)
+    def removeLot(self,request):
+        queryset = ResidentLotThroughModel.objects.all()
+        if(request.data['user_id'] != '0' and request.data['lot_id'] != '0'):
+            req = queryset.filter(resident_id = request.data['user_id'], lot_id = request.data['lot_id'])
+            req.delete()
+            rs = Resident.objects.get(pk=request.data['user_id'])
+            if rs.user.is_active == False and rs.lot.count() == 0:
+                rs.user.delete()
+            response_data = {'status':'success'}
+            return Response(response_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     @action(detail=False, methods=['post'],serializer_class=resident.FamilyOrderSerializer)
     def orderFamily(self, request):
         qs = ResidentLotThroughModel.objects.all()
@@ -161,3 +173,34 @@ class ChangePasswordViewSet(viewsets.ViewSet):
             response_data = {'status':'success'}
             return Response(response_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PropertyViewSet(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    def get_queryset(self):
+        return Community.objects.all()
+    @action(detail=False, methods=['get'],permission_classes=[AllowAny],serializer_class=resident.CommunitySerializer)
+    def getcommunity(self,request):
+        queryset = Community.objects.all()
+        serializer = resident.CommunitySerializer(queryset,context={'request': request},many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    @action(detail=False, methods=['get'],permission_classes=[AllowAny],serializer_class=resident.AreaSerializer)
+    def getarea(self,request):
+        queryset = Area.objects.all()
+        c_id = self.request.query_params.get('id', None)
+        area = get_list_or_404(queryset,community_id = c_id )
+        serializer = resident.AreaSerializer(area,context={'request': request},many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    @action(detail=False, methods=['get'],permission_classes=[AllowAny],serializer_class=resident.StreetSerializer)
+    def getstreet(self,request):
+        queryset = Street.objects.all()
+        c_id = self.request.query_params.get('id', None)
+        area = get_list_or_404(queryset,area_id = c_id )
+        serializer = resident.StreetSerializer(area,context={'request': request},many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    @action(detail=False, methods=['get'],permission_classes=[AllowAny],serializer_class=resident.LotzSerializer)
+    def getlot(self,request):
+        queryset = Lot.objects.all()
+        c_id = self.request.query_params.get('id', None)
+        area = get_list_or_404(queryset,street_id = c_id )
+        serializer = resident.LotzSerializer(area,context={'request': request},many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

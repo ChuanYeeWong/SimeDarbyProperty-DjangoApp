@@ -6,6 +6,7 @@ class Notification(models.Model):
         ('A', 'Announcement'),
         ('V', 'Visitor'),
         ('B', 'Billing'),
+        ('F','Family'),
     )
     descriptions = models.CharField(max_length=200)
     type = models.CharField(max_length=1, choices=TYPE, blank=True)

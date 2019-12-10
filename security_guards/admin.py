@@ -5,14 +5,15 @@ import crypt
 from django import forms
 # Register your models here.
 class SecurityForm(forms.ModelForm):
-
+    password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
         model = Security
         exclude = ['salt']
 
 @admin.register(Security)
 class SecurityAdmin(admin.ModelAdmin):
-    search_fields = ('name', )
+    search_fields = ('first_name','last_name' )
+    list_filter = ('community','area' )
     list_display = ('first_name','last_name','community','area')
     form = SecurityForm
     def save_model(self, request, obj, form, change):
@@ -23,7 +24,7 @@ class SecurityAdmin(admin.ModelAdmin):
         obj.save()
 @admin.register(ReasonSetting)
 class ReasonSettingAdmin(admin.ModelAdmin):
-    search_fields = ('name', )
+    search_fields = ('reason', )
 @admin.register(PassNumber)
 class ReasonSettingAdmin(admin.ModelAdmin):
     pass_no = ('pass_no', )

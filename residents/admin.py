@@ -67,6 +67,7 @@ class ResidentLotInline (CompactInline):
 
 @admin.register(Resident)
 class ResidentAdmin(DefaultInline):
+    search_fields = ('user__first_name','user__last_name','user__email','user__profile__phone_number' )
     fieldsets = [
         (None, {'fields':['user','default_lot']}),
     ]
@@ -201,4 +202,4 @@ class RequestFamilyAdmin(admin.ModelAdmin):
                 email.content_subtype = 'html'
                 email.send()
             rl = ResidentLotThroughModel.objects.create(resident=r,lot=obj.lot)
-            obj.save()  
+            #obj.save()  

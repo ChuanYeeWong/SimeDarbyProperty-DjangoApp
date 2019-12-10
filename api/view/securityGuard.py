@@ -11,7 +11,7 @@ from api.utils import jwt_response_payload_handler
 from api.jwt_login import sjwt_response_payload_handler
 from datetime import datetime
 from rest_framework_jwt.settings import api_settings
-from security_guards.models import ReasonSetting,PassNumber,DeviceNumber,Security,BoomgateLog
+from security_guards.models import ReasonSetting,PassNumber,DeviceNumber,Security,BoomgateLog,Post_Log
 from drf_yasg.utils import swagger_auto_schema
 from api.serializer import securityGuard,resident
 from rest_framework.decorators import action
@@ -101,6 +101,37 @@ class SVerifyJSONWebToken(SJSONWebTokenAPIView):
     """
     serializer_class = securityGuard.SVerifyJSONWebTokenSerializer
 
+class PostLogViewSet(viewsets.GenericViewSet):
+    serializer_class = securityGuard.PostLogSerializer
+    def get_queryset(self):
+        return Post_Log.objects.filter(area = self.request.user.area)
+    def list(self,request):
+        queryset = Post_Log.objects.filter(area = self.request.user.area).order_by('-timestamp')
+        page = self.paginate_queryset(queryset)
+        page = None
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = securityGuard.PostLogSerializer(queryset,context={'request': request},many=True)
+        return Response(serializer.data)
+    @swagger_auto_schema(request_body=securityGuard.PostLogSerializer,responses={201: securityGuard.PostLogSerializer()})
+    def create(self,request,*args, **kwargs):
+        #request.data['area'] = self.request.user.area.id
+        #request.data['security_guard'] = self.request.user.id
+        serializer = self.serializer_class(data=request.data,context = {'request': self.request} )
+        if serializer.is_valid():
+            post_log = serializer.save()
+            post_log.area = self.request.user.area
+            post_log.security_guard = self.request.user
+            post_log.save()
+            response_data = {'status':'success'}
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def retrieve(self, request, pk=None):
+        queryset = Post_Log.objects.filter(area = self.request.user.area).order_by('-timestamp')
+        post_log = get_object_or_404(queryset, pk=pk)
+        serializer = securityGuard.PostLogSerializer(post_log,context={'request': request})
+        return Response(serializer.data)
 class PassNumberViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PassNumber.objects.all()
     serializer_class = securityGuard.PassNumberSerializer

@@ -4,7 +4,7 @@ from rest_framework import serializers
 from residents.models import Lot,Community,Area,Street,Resident,ResidentLotThroughModel,Profile
 from rest_framework_jwt.compat import Serializer
 from ivms.models import IPCamera,Boomgate
-from security_guards.models import Security,ReasonSetting,PassNumber,DeviceNumber,BoomgateLog
+from security_guards.models import Security,ReasonSetting,PassNumber,DeviceNumber,BoomgateLog,Post_Log
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_jwt.compat import PasswordField
 from rest_framework_jwt.settings import api_settings
@@ -25,6 +25,22 @@ class LotOnlySerializer(serializers.ModelSerializer):
             'is_lock',
             'has_resident',
             'name',
+        )
+class PostLogSerializer(serializers.ModelSerializer):
+    security_guard_name = serializers.SerializerMethodField()
+    def get_security_guard_name(self,obj):
+        return obj.security_guard.first_name +' '+obj.security_guard.last_name
+    class Meta:
+        model = Post_Log
+        fields=(
+            'id',
+            'area',
+            'security_guard',
+            'longitude',
+            'qr_uuid',
+            'latitude',
+            'timestamp',
+            'security_guard_name',
         )
 class StreetLotSerializer(serializers.ModelSerializer):
     lot_set =LotOnlySerializer(many=True,read_only=True)
@@ -91,6 +107,7 @@ class ResidentUserSerializer(serializers.ModelSerializer):
 class ResidentLotThroughModelSerializer(serializers.ModelSerializer):
     resident = ResidentUserSerializer()
     class Meta:
+        ref_name = 'SecurityLotTroughModel'
         model = ResidentLotThroughModel
         fields=(
             'resident',

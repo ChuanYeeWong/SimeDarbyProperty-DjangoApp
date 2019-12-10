@@ -5,6 +5,7 @@ from residents.models import Lot, Resident, Community, Area
 from smart_selects.db_fields import ChainedForeignKey,ChainedManyToManyField
 from djmoney.models.validators import MaxMoneyValidator, MinMoneyValidator
 from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
 # Create your models here.
 class BillType(models.Model):
     name = models.CharField(max_length=150)
@@ -68,7 +69,7 @@ class Invoice(models.Model):
         verbose_name = 'Bill'
         verbose_name_plural = 'Bill'
     def __str__(self):
-        return str(self.id)
+        return "Inv-"+str(self.id)
     def save(self, *args, **kwargs):
         is_create = self.pk is None
         if is_create:
@@ -97,7 +98,9 @@ class Payment(models.Model):
     def save(self, *args, **kwargs):
         self.update_status(*args, **kwargs)
         super(Payment,self).save(*args, **kwargs)
-
+    def clean(self):
+        if self.amount > self.invoices.remainder:
+            raise ValidationError("Amount is too much")
     def update_status(self,*args, **kwargs):
         is_created =  self.pk is not None
         inv = self.invoices

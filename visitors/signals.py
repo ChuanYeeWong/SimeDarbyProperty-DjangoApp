@@ -6,6 +6,11 @@ from notification.models import Notification
 
 @receiver(post_save, sender=Track_Entry)
 def create_user_profile(sender, instance, created, **kwargs):
+        if instance.entry is not None:
+                if instance.entry.is_notify is not True and instance.status == "PEN" :
+                        Track_Entry.objects.filter(pk=instance.id).update(status = "AIR")
+                        #instance.status == "AIR"
+                        #instance.save()
         if instance.lot is not None and instance.resident is not None:
                 data = {"data_type":"track","track_id":instance.id, "status":instance.status,"lot":instance.lot.id,"area":instance.area.id,"resident":instance.resident.user.id}
         else:
@@ -13,7 +18,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         con = get_redis_connection("default")
         con.setex("foo",10,str(data).replace('\'','"'))
         if created:
-                if instance.entry_type is not 'I': 
+                if instance.entry_type is not 'I' or instance.entry.is_notify is True:
                         if instance.visitor_name is None:
                                 d = "A visitor has arrived"
                         else:
@@ -24,3 +29,4 @@ def create_user_profile(sender, instance, created, **kwargs):
                                 object_id = instance.id,
                                 user_id = instance.resident.user.id,
                         )
+                

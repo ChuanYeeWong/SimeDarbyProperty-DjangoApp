@@ -20,7 +20,7 @@ class PaymentInline(admin.StackedInline):
 @admin.register(Invoice)
 class InvoiceAdmin(DefaultInline):
     search_fields = ('id','lot__name' )
-    list_display = ('id','lot','area','amount','paid_amount','remainder','bill_type','paid','created_at','status')
+    list_display = ('__str__','lot','area','amount','paid_amount','remainder','bill_type','paid','created_at','status')
     list_filter = ('is_paid','lot__name',('bill_date', DateRangeFilter),'bill_type','status' )
     inlines = [PaymentInline]
     def get_readonly_fields(self, request, obj=None):

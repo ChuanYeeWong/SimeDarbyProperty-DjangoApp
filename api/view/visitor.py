@@ -101,7 +101,11 @@ class VisitorViewSet(viewsets.GenericViewSet):
         serializer =  visitor.QRSerializer(data=request.data)
         if serializer.is_valid():
             q = Entry_Schedule.objects.filter(is_active=True).all()
-            entry_schedule = get_object_or_404(q,qr_uuid=serializer.data['qr_uuid'])
+            areas = serializer.data.get('area_id',None)
+            if areas != None:
+                entry_schedule = get_object_or_404(q,qr_uuid=serializer.data['qr_uuid'],lot__street__area_id = areas)
+            else:
+                entry_schedule = get_object_or_404(q,qr_uuid=serializer.data['qr_uuid'])
             if entry_schedule:
                 if entry_schedule.entry_type == 'E' and entry_schedule.start_date == datetime.now().date():
                     try:
@@ -123,9 +127,13 @@ class VisitorViewSet(viewsets.GenericViewSet):
                                 status=status.HTTP_200_OK)
                         else:
                             for t in tr:
-                                if t.status != 'AOS' or t.status != 'ROS':
+                                if t.status != 'AOS' and t.status != 'ROS':
                                     return Response({'status':'error'},
                                         status=status.HTTP_400_BAD_REQUEST)
+                                else:
+                                    return Response(visitor.EntryScheduleSerializer(entry_schedule).data,
+                                        status=status.HTTP_200_OK)
+
                     else:
                         if entry_schedule.entry_type == 'S' and entry_schedule.start_date >= datetime.now().date() and entry_schedule.end_date <= datetime.now().date():
                             try:
@@ -137,10 +145,10 @@ class VisitorViewSet(viewsets.GenericViewSet):
                                     status=status.HTTP_200_OK)
                             else:
                                 for t in tr:
-                                    if t.status != 'AOS' or t.status != 'ROS':
+                                    if t.status != 'AOS' and t.status != 'ROS':
                                         return Response({'status':'error'},
                                             status=status.HTTP_400_BAD_REQUEST)
-                        return Response(visitor.EntryScheduleSerializer(entry_schedule).data,status=status.HTTP_200_OK)
+                            return Response(visitor.EntryScheduleSerializer(entry_schedule).data,status=status.HTTP_200_OK)
         return Response({'status':'error'}, status=status.HTTP_400_BAD_REQUEST)
     @action(detail=False, methods=['post'],permission_classes=[AllowAny],serializer_class=visitor.QRSerializer)
     def check_qr_exit(self, request):
@@ -150,7 +158,7 @@ class VisitorViewSet(viewsets.GenericViewSet):
             entry_schedule = get_object_or_404(q,qr_uuid=serializer.data['qr_uuid'])
             if entry_schedule:
                 try:
-                    tr = Track_Entry.objects.filter(entry_id=entry_schedule.id)
+                    tr = Track_Entry.objects.filter(entry_id=entry_schedule.id).order_by('-id')
                 except Track_Entry.DoesNotExist:
                     tr = None
                 if tr != None:

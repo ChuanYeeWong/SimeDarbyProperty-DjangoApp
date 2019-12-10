@@ -38,6 +38,7 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin/defender/', include('defender.urls')), # defender admin
     path('jet/',include('jet.urls','jet')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),

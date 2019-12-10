@@ -24,10 +24,18 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active',
             'profile',
         )
+class CommunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community
+        fields = (
+            'id',
+            'name',
+        )
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Area
         fields = (
+            'id',
             'name',
             'thumbnail',
         )
@@ -39,6 +47,16 @@ class StreetSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'area',
+            
+        )
+class LotzSerializer(serializers.ModelSerializer):
+    street = StreetSerializer()
+    class Meta:
+        model = Lot
+        fields = (
+            'id',
+            'name',
+            'street',
             
         )
 class ResidentFamSerializer(serializers.ModelSerializer):
@@ -110,6 +128,9 @@ class LotSerializer(serializers.ModelSerializer):
             'is_default',
             'is_notify',
         )
+class RemoveLot(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    lot_id = serializers.IntegerField()
 class FamilyOrderSerializer(serializers.Serializer):
     froms = serializers.IntegerField()
     to = serializers.IntegerField()
@@ -175,6 +196,8 @@ class ResidentSerializer(serializers.ModelSerializer):
             'is_lock_down',
         )
 class RequestSerializer(serializers.ModelSerializer):
+    confirm =  serializers.BooleanField(default=False)
+    tou =  serializers.BooleanField(default=False)
     class Meta:
         model = Request
         fields=(
@@ -191,6 +214,14 @@ class RequestSerializer(serializers.ModelSerializer):
             'confirm', 
             'tou',
         )
+    def validate_confirm(self, value):
+        if value is not True:
+            raise serializers.ValidationError("This field is required")
+        return value
+    def validate_tou(self, value):
+        if value is not True:
+            raise serializers.ValidationError("This field is required")
+        return value
 class RequestFamilySerializer(serializers.ModelSerializer):
     class Meta:
         model = RequestFamily

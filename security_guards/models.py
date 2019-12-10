@@ -18,7 +18,13 @@ class Security(models.Model):
     community =  models.ForeignKey(Community,on_delete=models.CASCADE)
     area = models.ForeignKey(Area,on_delete=models.CASCADE)
     
-
+class Post_Log(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    security_guard = models.ForeignKey(Security,on_delete=models.CASCADE,null=True,blank=True)
+    longitude = models.CharField(max_length=150)
+    latitude =  models.CharField(max_length=150)
+    area = models.ForeignKey(Area,on_delete=models.CASCADE,null=True,blank=True)
+    qr_uuid = models.CharField(max_length=225)
 class ReasonSetting(models.Model):
     reason = models.CharField(max_length=150)
     def __str__(self):

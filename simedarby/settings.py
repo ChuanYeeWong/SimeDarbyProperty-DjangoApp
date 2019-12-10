@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'crispy_forms',
     'smart_selects',
-    #'easyaudit',
+    'easyaudit',
     'rangefilter',
     'users.apps.UsersConfig',
     'residents.apps.ResidentsConfig',
@@ -61,19 +61,30 @@ INSTALLED_APPS = [
     'reports.apps.ReportsConfig',
     'visitors.apps.VisitorsConfig',
     'notification.apps.NotificationConfig',
-
+    'axes',
+    'defender',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    #'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+    'defender.middleware.FailedLoginMiddleware',
+]
+SILENCED_SYSTEM_CHECKS = ['axes.W003']
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'simedarby.urls'
@@ -96,7 +107,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'simedarby.wsgi.application'
 
-
+AXES_ENABLED = False
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
@@ -278,8 +289,8 @@ JET_SIDE_MENU_ITEMS = [
     {'app_label': 'security_guards', 'items': [
         {'name': 'security','permissions': ['security_guards.change_security']},
         {'name': 'reasonsetting','permissions': ['security_guards.change_reasonsetting']},
-         {'name': 'devicenumber','permissions': ['security_guards.change_devicenumber']},
-        {'name': 'passnumber','permissions': ['security_guards.change_passnumber']},
+        {'name': 'devicenumber','permissions': ['security_guards.view_devicenumber']},
+        {'name': 'passnumber','permissions': ['security_guards.view_passnumber']},
     ],'permissions': ['security_guards.change_security']},
     {'app_label': 'ivms', 'items': [
         {'name': 'boomgate'},
@@ -291,10 +302,21 @@ JET_SIDE_MENU_ITEMS = [
     {'app_label': 'auth', 'items': [
         {'name': 'group'},
     ],'permissions': ['core.user']},
-
     {'app_label': 'reports', 'items': [
-        {'name': 'invoicereport'},
-        {'name': 'paymentreport'},
-        {'name': 'visitreport'},
-    ],},
+        {'name': 'invoicereport','permissions':['reports.view_invoicereport']},
+        {'name': 'paymentreport','permissions':['reports.view_paymentreport']},
+        {'name': 'visitreport','permissions':['reports.view_visitreport']},
+    ],'permissions':['reports.view_invoicereport'],},
+    {'app_label': 'easyaudit', 'items': [
+        {'name': 'crudevent'},
+        {'name': 'loginevent'},
+        {'name': 'requestevent'},
+    ],'permissions': ['easyaudit.view_crudevent'],},
+    {'app_label': 'axes', 'items': [
+        {'name': 'accessattempt'},
+        {'name': 'accesslog'},
+    ],'permissions': ['axes.view_accessattempt'],},
+    {'app_label': 'defender', 'items': [
+        {'name': 'accessattempt'},
+    ],'permissions': ['defender.view_accessattempt'],},
 ]
