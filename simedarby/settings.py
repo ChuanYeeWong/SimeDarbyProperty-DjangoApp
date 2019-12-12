@@ -126,7 +126,7 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'ssl': {
-                'cert':os.path.join(BASE_DIR, 'static/BaltimoreCyberTrustRoot.crt.pem'),
+                'ca':os.path.join(BASE_DIR, 'static/BaltimoreCyberTrustRoot.crt.pem'),
             }
         },
     }
