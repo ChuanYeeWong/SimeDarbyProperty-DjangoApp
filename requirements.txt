@@ -23,5 +23,6 @@ django-redis
 packaging
 https://github.com/digi604/django-smart-selects/archive/master.zip
 django-axes
-django-defender
+django-push-notifications
+#django-defender
 #mysqlclient

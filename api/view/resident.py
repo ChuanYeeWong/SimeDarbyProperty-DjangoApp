@@ -26,7 +26,16 @@ from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMessage
 from django.template import loader,Context
 from rest_framework.decorators import action
+from rest_framework_jwt.views import JSONWebTokenAPIView
 # Create your views here.
+class ObtainJSONWebToken(JSONWebTokenAPIView):
+    """
+    API View that receives a POST with a user's username and password.
+
+    Returns a JSON Web Token that can be used for authenticated requests.
+    """
+    serializer_class = resident.CustomJSONWebTokenSerializer
+
 class ResidentViewSet(viewsets.GenericViewSet):
     """
     Get Resident Model.
@@ -169,7 +178,7 @@ class ChangePasswordViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             user = request.user
             user.set_password(request.data['new_password'])
-            user.save();
+            user.save()
             response_data = {'status':'success'}
             return Response(response_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -204,3 +213,5 @@ class PropertyViewSet(viewsets.GenericViewSet):
         area = get_list_or_404(queryset,street_id = c_id )
         serializer = resident.LotzSerializer(area,context={'request': request},many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+custom_obtain_jwt_token = ObtainJSONWebToken.as_view()

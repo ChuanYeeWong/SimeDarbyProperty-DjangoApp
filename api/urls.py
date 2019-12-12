@@ -30,7 +30,7 @@ router.register(r'request_family',resident.RequestFamilyViewSet,basename='reques
 router.register(r'billing',bill.BillingViewSet,basename='billing')
 urlpatterns = [
     path('',include(router.urls)),
-    path('login/', obtain_jwt_token), 
+    path('login/', resident.custom_obtain_jwt_token), 
     path('verify_token/', verify_jwt_token),
     path('security_login/',securityGuard.SecurityLogin.as_view()),
     path('security_verify_token/',securityGuard.SVerifyJSONWebToken.as_view())

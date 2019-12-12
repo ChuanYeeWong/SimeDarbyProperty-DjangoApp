@@ -34,7 +34,8 @@ def activate(request, uidb64, token):
         return render(request, 'users/emailValidation.html', {'form': form})
 
     else:
-        return HttpResponse('Activation link is invalid!')
+        return render(request, 'users/invalid.html')
+
 
 def confirm_terms(request, uidb64, token):
     try:

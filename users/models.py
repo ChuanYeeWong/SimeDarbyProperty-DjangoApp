@@ -48,7 +48,7 @@ class User(AbstractUser):
 
     username = None
     email = models.EmailField(_('email address'), unique=True)
-
+    acc_is_activated = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name','is_staff']
     objects = UserManager()

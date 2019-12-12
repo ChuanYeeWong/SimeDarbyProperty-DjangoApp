@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'visitors.apps.VisitorsConfig',
     'notification.apps.NotificationConfig',
     'axes',
-    'defender',
+    'push_notifications',
+
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',
-    'defender.middleware.FailedLoginMiddleware',
 ]
 SILENCED_SYSTEM_CHECKS = ['axes.W003']
 AUTHENTICATION_BACKENDS = [
@@ -106,8 +106,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'simedarby.wsgi.application'
-
-AXES_ENABLED = False
+AXES_USERNAME_FORM_FIELD = 'email'
+AXES_RESET_ON_SUCCESS = True
+AXES_COOLOFF_TIME = 1
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
+AXES_REST_FRAMEWORK_ACTIVE = True
+#AXES_ENABLED = False
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
@@ -316,7 +320,5 @@ JET_SIDE_MENU_ITEMS = [
         {'name': 'accessattempt'},
         {'name': 'accesslog'},
     ],'permissions': ['axes.view_accessattempt'],},
-    {'app_label': 'defender', 'items': [
-        {'name': 'accessattempt'},
-    ],'permissions': ['defender.view_accessattempt'],},
+
 ]
