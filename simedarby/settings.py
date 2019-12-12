@@ -115,14 +115,7 @@ AXES_REST_FRAMEWORK_ACTIVE = True
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
-if(DEBUG):
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-else:
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
@@ -133,12 +126,11 @@ else:
             'PORT': '3306',
             'OPTIONS': {
                 'ssl': {
-                    'cert':'/static/BaltimoreCyberTrustRoot.crt.pem' ,
+                    'cert':os.path.join(BASE_DIR, 'static/BaltimoreCyberTrustRoot.crt.pem'),
                 }
             },
         }
     }
-
 
 
 # Password validation
