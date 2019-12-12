@@ -116,21 +116,21 @@ AXES_REST_FRAMEWORK_ACTIVE = True
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
-            'NAME': os.environ['MYSQL_DBNAME'], #local: libraries #server: 
-            'USER': os.environ['MYSQL_USERNAME'], #root #root
-            'PASSWORD': os.environ['MYSQL_PASSWORD'], #local: root #server: 
-            'HOST': os.environ['MYSQL_HOSTNAME'], #local: localhost  #server:
-            'PORT': '3306',
-            'OPTIONS': {
-                'ssl': {
-                    'cert':os.path.join(BASE_DIR, 'static/BaltimoreCyberTrustRoot.crt.pem'),
-                }
-            },
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
+        'NAME': os.environ['MYSQL_DBNAME'], #local: libraries #server: 
+        'USER': os.environ['MYSQL_USERNAME'], #root #root
+        'PASSWORD': os.environ['MYSQL_PASSWORD'], #local: root #server: 
+        'HOST': os.environ['MYSQL_HOSTNAME'], #local: localhost  #server:
+        'PORT': '3306',
+        'OPTIONS': {
+            'ssl': {
+                'cert':os.path.join(BASE_DIR, 'static/BaltimoreCyberTrustRoot.crt.pem'),
+            }
+        },
     }
+}
 
 
 # Password validation
