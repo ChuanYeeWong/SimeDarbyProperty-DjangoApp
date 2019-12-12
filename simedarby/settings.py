@@ -115,21 +115,29 @@ AXES_REST_FRAMEWORK_ACTIVE = True
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
-DATABASES = {
+if(DEBUG):
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
-        'NAME': os.environ['MYSQL_DBNAME'], #local: libraries #server: 
-        'USER': os.environ['MYSQL_USERNAME'], #root #root
-        'PASSWORD': os.environ['MYSQL_PASSWORD'], #local: root #server: 
-        'HOST': os.environ['MYSQL_HOSTNAME'], #local: localhost  #server:
-        'PORT': '3306',
-        'OPTIONS': {
-            'ssl': {
-                'ssl-ca':os.path.join(BASE_DIR, 'static/BaltimoreCyberTrustRoot.crt.pem'),
-            }
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
+            'NAME': os.environ['MYSQL_DBNAME'], #local: libraries #server: 
+            'USER': os.environ['MYSQL_USERNAME'], #root #root
+            'PASSWORD': os.environ['MYSQL_PASSWORD'], #local: root #server: 
+            'HOST': os.environ['MYSQL_HOSTNAME'], #local: localhost  #server:
+            'PORT': '3306',
+            'OPTIONS': {
+                'ssl': {
+                    'ssl-ca':'/static/BaltimoreCyberTrustRoot.crt.pem' ,
+                }
+            },
+        }
+    }
 
 
 # Password validation
@@ -212,10 +220,7 @@ JWT_AUTH = {
 }
 STATIC_ROOT = os.environ.get('STATIC_PATH',"./static_files/")
 
-STATICFILES_DIRS = [
-    
-    os.environ.get('STATIC_PATH',"./static/"), 
-]
+
 #email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
