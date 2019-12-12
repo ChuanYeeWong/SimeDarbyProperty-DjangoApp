@@ -25,4 +25,4 @@ https://github.com/digi604/django-smart-selects/archive/master.zip
 django-axes
 django-push-notifications
 #django-defender
-#mysqlclient
+mysqlclient
