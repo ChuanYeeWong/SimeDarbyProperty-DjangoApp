@@ -46,7 +46,8 @@ urlpatterns = [
     path('v1/',include('api.urls')),
     path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('chaining/', include('smart_selects.urls')),
-    path('',include('defaultapp.urls')),
+    
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns +=[ path('',include('defaultapp.urls')),]
