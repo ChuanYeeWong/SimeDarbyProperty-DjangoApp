@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'easyaudit',
     'rangefilter',
     'users.apps.UsersConfig',
+    'defaultapp.apps.DefaultappConfig',
     'residents.apps.ResidentsConfig',
     'announcements.apps.AnnouncementsConfig',
     'security_guards.apps.SecurityGuardsConfig',
@@ -130,7 +131,6 @@ DATABASES = {
         },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -211,15 +211,19 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
 }
 STATIC_ROOT = os.environ.get('STATIC_PATH',"./static_files/")
+STATICFILES_DIRS = [	
 
+    os.environ.get('STATIC_PATH',"./static/"), 	
+]
 
 #email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'simedarbyvms8@gmail.com'
-EMAIL_HOST_PASSWORD = 'simedarby112211'
-EMAIL_PORT = 587
+EMAIL_HOST = 'mx.get-enterprise.com'
+EMAIL_HOST_USER = 'sdp'
+EMAIL_HOST_PASSWORD = 'd32b763d2fdcc4e97869a914e6403c63'
+EMAIL_PORT = 25
+DEFAULT_FROM_EMAIL = '"No Reply" <noreply@simedarbycommunity.com>'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.environ.get('MEDIA_PATH',"./media_storage/")
 PASSWORD_RESET_TIMEOUT_DAYS = 0.5
@@ -232,10 +236,10 @@ JET_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
 JET_SIDE_MENU_COMPACT = False
 JET_DEFAULT_THEME = 'simedarby'
 JET_APPLICATION_PAGE = False
-JET_LOGO = "/ivms/img/simedarby-logo.svg"
+JET_LOGO = "/ivms/img/logo1.png"
 JET_LOGO_WIDTH = "50%"
 JET_LOGO_HEIGHT = "50%"
-JET_LOGIN_LOGO = "/ivms/img/simedarby-logo_blk.svg"
+JET_LOGIN_LOGO = "/ivms/img/logo1.png"
 JET_LOGIN_LOGO_WIDTH = "50%"
 JET_LOGIN_LOGO_HEIGHT = "50%"
 JET_LOGIN_BACKGROUND = "url('"+STATIC_URL+"/ivms/img/gallery-glades.jpg')"

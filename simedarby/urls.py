@@ -37,8 +37,8 @@ schema_view = get_schema_view(
     permission_classes=(permissions.IsAuthenticated,),
 )
 urlpatterns = [
-    path('admin/', admin.site.urls),
-   
+    path('admin/', admin.site.urls,name="admin"),
+    path('',include('defaultapp.urls',)),
     path('jet/',include('jet.urls','jet')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
