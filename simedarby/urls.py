@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+from django.conf.urls import url
 admin.site.site_header = 'Sime Darby'
 admin.site.site_title = 'Sime Darby'
 admin.site.site_url = ''
@@ -38,7 +38,6 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
     path('admin/', admin.site.urls,name="admin"),
-    path('',include('defaultapp.urls',)),
     path('jet/',include('jet.urls','jet')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
@@ -47,6 +46,7 @@ urlpatterns = [
     path('v1/',include('api.urls')),
     path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('chaining/', include('smart_selects.urls')),
+    path('',include('defaultapp.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
