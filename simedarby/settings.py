@@ -132,6 +132,7 @@ DATABASES = {
     }
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -223,6 +224,7 @@ EMAIL_HOST_USER = 'sdp'
 EMAIL_HOST_PASSWORD = 'd32b763d2fdcc4e97869a914e6403c63'
 EMAIL_PORT = 25
 DEFAULT_FROM_EMAIL = '"No Reply" <noreply@simedarbycommunity.com>'
+EMAIL_USE_TLS = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.environ.get('MEDIA_PATH',"./media_storage/")
