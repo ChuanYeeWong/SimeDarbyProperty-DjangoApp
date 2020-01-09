@@ -12,6 +12,11 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+from django.urls import include, re_path
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 class AreaInline(admin.StackedInline):
      model = Area
      extra = 1
@@ -67,6 +72,16 @@ class ResidentLotInline (CompactInline):
 
 @admin.register(Resident)
 class ResidentAdmin(DefaultInline):
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            re_path(
+                r'^(?P<account_id>.+)/resent/$',
+                self.admin_site.admin_view(self.process_deposit),
+                name='account-resent',
+            ),
+        ]
+        return custom_urls + urls
     change_form_template = "admin/account/account_resent.html"
     search_fields = ('user__first_name','user__last_name','user__email','user__profile__phone_number' )
     fieldsets = [
@@ -82,6 +97,47 @@ class ResidentAdmin(DefaultInline):
         return obj.user.profile.phone_number
     def default_house_lot(self,obj):
         return obj.default_lot
+    def process_deposit(self, request, account_id, *args, **kwargs):
+        account = self.get_object(request, account_id)
+        user =  get_user_model().objects.get(resident = account.pk)
+
+        
+        if(user.acc_is_activated == True or user.is_active):
+            messages.add_message(request, messages.ERROR, 'Error! Account is already activated!')
+            #self.message_user(request, 'Error! Account is already activated!')
+            url = reverse(
+                'admin:residents_resident_change',
+                args=[account.pk],
+                current_app=self.admin_site.name,
+            )
+            return HttpResponseRedirect(url)
+        else: 
+            messages.add_message(request, messages.SUCCESS, 'Successfully resent activation link')
+            current_site = get_current_site(request)
+            mail_subject = 'Account Verification'
+            message = loader.get_template(
+            'emails/activateAccount.html').render(
+            {
+                'name': user.first_name,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+            }
+            )
+            to_email = user.email
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            email.content_subtype = 'html'
+            email.send()
+            #self.message_user(request, 'Successfully resent activation link')
+            url = reverse(
+                'admin:residents_resident_change',
+                args=[account.pk],
+                current_app=self.admin_site.name,
+            )
+            return HttpResponseRedirect(url)
+        #return HttpResponse(request)
 admin.site.register(Lot,LotAdmin)
 
 @admin.register(Request)

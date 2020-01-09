@@ -4,6 +4,7 @@ from announcements.models import Announcement
 from datetime import datetime
 from notification.models import Notification
 from django.utils import timezone
+from push_notifications.models import GCMDevice
 class Command(BaseCommand):
     help = 'Update Announcement'
 
@@ -18,6 +19,8 @@ class Command(BaseCommand):
                         if d.user.id in re:
                             pass
                         else:
+                            devices = GCMDevice.objects.filter(user=d.user.id)
+                            devices.send_message(instance.title, extra={"type": "A","value":instance.id})
                             Notification.objects.create(
                                     descriptions = a.title,
                                     type = "A",

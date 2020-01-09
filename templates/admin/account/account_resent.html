@@ -3,5 +3,5 @@
 {% load i18n admin_urls %}
 {% block object-tools-items %}
     
-    <a href="#">Resent Activation Link</a>
+    <a href="{% url 'admin:account-resent' original.id %}">Resent Activation Link</a>
 {% endblock %}

@@ -5,6 +5,7 @@ from notification.models import Notification
 from django.utils import timezone
 from visitors.models import Track_Entry
 from django_redis import get_redis_connection
+from push_notifications.models import GCMDevice
 class Command(BaseCommand):
     help = 'Send to Family Member'
 
@@ -20,6 +21,8 @@ class Command(BaseCommand):
                         d = "A visitor has arrived"
                     else:
                         d = "Visitor "+str(t.visitor_name)+" has arrived!"
+                    devices = GCMDevice.objects.filter(user=instance.resident.user.id)
+                    devices.send_message(d,extra={"type": "V","value":instance.id})
                     Notification.objects.create(
                             descriptions = d,
                             type = "V",

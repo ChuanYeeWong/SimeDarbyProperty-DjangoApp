@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django_redis import get_redis_connection
 from datetime import datetime
 from notification.models import Notification
+from push_notifications.models import GCMDevice
 @receiver(post_save, sender=Announcement)
 def create_user_profile(sender, instance, created, **kwargs):
     
@@ -17,6 +18,8 @@ def create_user_profile(sender, instance, created, **kwargs):
                     if d.user.id in re:
                         pass
                     else:
+                        devices = GCMDevice.objects.filter(user=d.user.id)
+                        devices.send_message(instance.title, extra={"type": "A","value":instance.id})
                         Notification.objects.create(
                                 descriptions = instance.title,
                                 type = "A",

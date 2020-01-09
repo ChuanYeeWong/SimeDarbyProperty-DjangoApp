@@ -18,7 +18,7 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.compat import get_username_field, PasswordField
 from django.contrib.auth.signals import user_logged_in
 
-
+from push_notifications.models import GCMDevice
 User = get_user_model()
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -42,7 +42,8 @@ class CustomJSONWebTokenSerializer(Serializer):
 
         self.fields[self.username_field] = serializers.CharField()
         self.fields['password'] = PasswordField(write_only=True)
-
+        self.fields['reg_id'] = serializers.CharField(required=False) 
+        self.fields['device_id'] = serializers.CharField(required=False) 
     @property
     def username_field(self):
         return get_username_field()
@@ -61,6 +62,12 @@ class CustomJSONWebTokenSerializer(Serializer):
                 if not user.is_active:
                     msg = _('User account is disabled.')
                     raise serializers.ValidationError(msg)
+
+                if attrs.get('reg_id') != None:
+                    try:
+                        gcm = GCMDevice.objects.get(registration_id=attrs.get('reg_id'))
+                    except GCMDevice.DoesNotExist:
+                        gcm = GCMDevice.objects.create(user=user,registration_id=attrs.get('reg_id'),device_id=attrs.get('device_id'),cloud_message_type='FCM')
 
                 payload = jwt_payload_handler(user)
                 user_logged_in.send(sender=user.__class__, request=self.context.get('request'), user=user)

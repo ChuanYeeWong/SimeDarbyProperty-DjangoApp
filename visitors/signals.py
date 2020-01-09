@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_redis import get_redis_connection
 from notification.models import Notification
-
+from push_notifications.models import GCMDevice
 @receiver(post_save, sender=Track_Entry)
 def create_user_profile(sender, instance, created, **kwargs):
         if instance.entry is not None:
@@ -23,6 +23,8 @@ def create_user_profile(sender, instance, created, **kwargs):
                                 d = "A visitor has arrived"
                         else:
                                 d = "Visitor "+str(instance.visitor_name)+" has arrived!"
+                        devices = GCMDevice.objects.filter(user=instance.resident.user.id)
+                        devices.send_message(d,extra={"type": "V","value":instance.id})
                         Notification.objects.create(
                                 descriptions = d,
                                 type = "V",

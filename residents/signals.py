@@ -4,6 +4,7 @@ from django_redis import get_redis_connection
 from datetime import datetime
 from .models import RequestFamily
 from notification.models import Notification
+from push_notifications.models import GCMDevice
 @receiver(post_save, sender=RequestFamily)
 def create_user_profile(sender, instance, created, **kwargs):
     if instance.status != 'P':
@@ -11,6 +12,8 @@ def create_user_profile(sender, instance, created, **kwargs):
             a = "approved"
         else:
             a = "rejected"
+        devices = GCMDevice.objects.filter(user=instance.requestor.user.id)
+        devices.send_message("Your request for "+instance.first_name+" "+instance.last_name+" has been "+a)
         Notification.objects.create(
                 descriptions = "Your request for "+instance.first_name+" "+instance.last_name+" has been "+a,
                 type = "F",

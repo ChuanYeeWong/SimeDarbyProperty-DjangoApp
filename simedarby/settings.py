@@ -116,6 +116,7 @@ AXES_REST_FRAMEWORK_ACTIVE = True
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 
@@ -216,7 +217,9 @@ STATICFILES_DIRS = [
 
     os.environ.get('STATIC_PATH',"./static/"), 	
 ]
-
+PUSH_NOTIFICATIONS_SETTINGS = {
+        "FCM_API_KEY": "AIzaSyBOqT9vGH1LE_N4RqmX0mBlks2opwrt-jQ",
+}
 #email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mx.get-enterprise.com'
@@ -314,5 +317,7 @@ JET_SIDE_MENU_ITEMS = [
         {'name': 'accessattempt'},
         {'name': 'accesslog'},
     ],'permissions': ['axes.view_accessattempt'],},
-
+    {'app_label': 'push_notifications', 'items': [
+        {'name': 'gcmdevice'},
+    ],'permissions': ['push_notifications.view_gcmdevice'],},
 ]
