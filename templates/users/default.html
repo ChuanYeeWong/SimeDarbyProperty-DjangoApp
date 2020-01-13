@@ -54,4 +54,39 @@
     <!-- END Content -->
 
 </div>
+<style>
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color:#3e3e3e;
+  padding:5px 20px;
+} 
+.footer-link,.footer-link:visited{
+  margin:10px 10px;
+  padding:0px;
+  color:#fff;
+}
+.footer-link:hover{
+  margin:10px 10px;
+  padding:0px;
+  color:#fff;
+}
+.footer-link:active{
+  color:#fff;
+}
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+<footer class="footer ">
+  <a class="footer-link float-left">Powered By Sime Darby Property</a>
+  <a class="footer-link float-right" style="margin-right:40px;"href="/static/ivms/file/TermsOfUsage.pdf">Terms of Usage</a>
+  <a class="footer-link float-right" href="/static/ivms/file/PDPA.pdf">PDPA Notice</a>
+
+</footer>
+
 {% endblock %}
