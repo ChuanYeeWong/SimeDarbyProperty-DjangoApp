@@ -21,7 +21,7 @@ pytz
 django-admin-rangefilter
 django-redis
 packaging
-https://github.com/digi604/django-smart-selects/archive/master.zip
+https://github.com/danielldt/django-smart-selects/archive/master.zip
 django-axes
 django-push-notifications
 #django-defender
