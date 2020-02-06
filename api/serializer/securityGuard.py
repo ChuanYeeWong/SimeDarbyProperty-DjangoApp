@@ -11,6 +11,8 @@ from rest_framework_jwt.settings import api_settings
 from api.utils import jwt_payload_handler, jwt_encode_handler, jwt_decode_handler,jwt_get_username_from_payload_handler
 from django.utils.translation import ugettext as _
 from .resident import UserSerializer,StreetSerializer
+from django.utils import timezone
+from datetime import datetime, timedelta
 class LotOnlySerializer(serializers.ModelSerializer):
     has_resident = serializers.SerializerMethodField()
     def get_has_resident(self,obj):
@@ -28,6 +30,7 @@ class LotOnlySerializer(serializers.ModelSerializer):
         )
 class PostLogSerializer(serializers.ModelSerializer):
     security_guard_name = serializers.SerializerMethodField()
+    timestamp = serializers.DateTimeField(required=False)
     def get_security_guard_name(self,obj):
         return obj.security_guard.first_name +' '+obj.security_guard.last_name
     class Meta:
@@ -42,6 +45,17 @@ class PostLogSerializer(serializers.ModelSerializer):
             'timestamp',
             'security_guard_name',
         )
+    def get_current_user(self):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            return request.user
+        return None
+    def validate_longitude(self, value):
+        user = self.get_current_user()
+        pl = Post_Log.objects.filter(security_guard_id = user.id).order_by('-timestamp').first()
+        if pl.timestamp > (timezone.now()- timedelta(minutes=30)):
+            raise serializers.ValidationError("Please try again later.")
+        return value
 class StreetLotSerializer(serializers.ModelSerializer):
     lot_set =LotOnlySerializer(many=True,read_only=True)
     class Meta:
@@ -50,7 +64,6 @@ class StreetLotSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'lot_set',
-            
         )
 class BoomgateLogSerializer(serializers.ModelSerializer):
     class Meta:

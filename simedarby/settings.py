@@ -116,6 +116,7 @@ AXES_REST_FRAMEWORK_ACTIVE = True
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 #mysql
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #django.db.backends.mysql 

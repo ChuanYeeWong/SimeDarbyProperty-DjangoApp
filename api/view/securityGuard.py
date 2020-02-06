@@ -15,6 +15,7 @@ from security_guards.models import ReasonSetting,PassNumber,DeviceNumber,Securit
 from drf_yasg.utils import swagger_auto_schema
 from api.serializer import securityGuard,resident
 from rest_framework.decorators import action
+from datetime import datetime, timedelta
 class GetPrimaryViewSet(viewsets.GenericViewSet):
     """
     Get Primary User By House Lot.
@@ -104,9 +105,13 @@ class SVerifyJSONWebToken(SJSONWebTokenAPIView):
 class PostLogViewSet(viewsets.GenericViewSet):
     serializer_class = securityGuard.PostLogSerializer
     def get_queryset(self):
-        return Post_Log.objects.filter(area = self.request.user.area)
+        start_date = self.request.query_params.get('start_date', None)
+        end_date = self.request.query_params.get('end_date', None)
+        if start_date and end_date:
+            return Post_Log.objects.filter(area = self.request.user.area,timestamp__gte = start_date, timestamp__lte = datetime.strptime(end_date,"%Y-%m-%d").date() + timedelta(hours=23)).order_by('-timestamp')
+        return Post_Log.objects.filter(area = self.request.user.area).order_by('-timestamp')
     def list(self,request):
-        queryset = Post_Log.objects.filter(area = self.request.user.area).order_by('-timestamp')
+        queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
         page = None
         if page is not None:
