@@ -6,7 +6,9 @@ from notification.models import Notification
 from push_notifications.models import GCMDevice
 @receiver(post_save, sender=Track_Entry)
 def create_user_profile(sender, instance, created, **kwargs):
+        notify = False
         if instance.entry is not None:
+                notify = instance.entry.is_notify
                 if instance.entry.is_notify is not True and instance.status == "PEN" :
                         Track_Entry.objects.filter(pk=instance.id).update(status = "AIR")
                         #instance.status == "AIR"
@@ -18,7 +20,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         con = get_redis_connection("default")
         con.setex("foo",10,str(data).replace('\'','"'))
         if created:
-                if instance.entry_type is not 'I' or instance.entry.is_notify is True:
+                if instance.entry_type is not 'I' or notify:
                         if instance.visitor_name is None:
                                 d = "A visitor has arrived"
                         else:
