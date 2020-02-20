@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django_redis import get_redis_connection
 from notification.models import Notification
 from push_notifications.models import GCMDevice
+import redis
 @receiver(post_save, sender=Track_Entry)
 def create_user_profile(sender, instance, created, **kwargs):
         notify = False
@@ -17,7 +18,9 @@ def create_user_profile(sender, instance, created, **kwargs):
                 data = {"data_type":"track","track_id":instance.id, "status":instance.status,"lot":instance.lot.id,"area":instance.area.id,"resident":instance.resident.user.id}
         else:
                 data = {"data_type":"track","track_id":instance.id, "status":instance.status,"lot":0,"area":instance.area.id,"resident":0}
-        con = get_redis_connection("default")
+        con = redis.StrictRedis(host='vmswebcache.redis.cache.windows.net',
+        port=6380, db=0, password='IsF++8DTZ01nNN3Ec5b5FS9xxoZYRD4Qs+UvG6FB5ew=', ssl=True)
+        #con = get_redis_connection("default")
         con.setex("foo",10,str(data).replace('\'','"'))
         if created:
                 if instance.entry_type is not 'I' or notify:
