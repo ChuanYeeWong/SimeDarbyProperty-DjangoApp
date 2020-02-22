@@ -175,7 +175,7 @@ class RequestAdmin(admin.ModelAdmin):
             except (get_user_model().DoesNotExist, Resident.DoesNotExist) as e:
                 just_send = True
                 user = get_user_model().objects.create_user(
-                    username = obj.email,
+                    #username = obj.email,
                     email=obj.email,
                     first_name=obj.first_name,
                     last_name=obj.last_name,
