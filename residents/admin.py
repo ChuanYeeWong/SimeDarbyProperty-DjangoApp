@@ -205,7 +205,7 @@ class RequestAdmin(admin.ModelAdmin):
                 email.send()
             rl = ResidentLotThroughModel.objects.create(resident=r,lot=obj.lot)
             ##Resend Activation Email
-            if just_send == False and user.is_acitve == False and user.acc_is_activated == False:
+            if just_send == False and user.is_active == False and user.acc_is_activated == False:
                 current_site = get_current_site(request)
                 mail_subject = 'Account Verification'
                 message = loader.get_template(
