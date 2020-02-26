@@ -69,12 +69,12 @@ class CustomJSONWebTokenSerializer(Serializer):
                             gcm = GCMDevice.objects.get(registration_id=attrs.get('reg_id'),device_id=attrs.get('device_id'),user_id = user.id)
                         except GCMDevice.DoesNotExist:
                             gcm = GCMDevice.objects.create(user=user,registration_id=attrs.get('reg_id'),device_id=attrs.get('device_id'),cloud_message_type='FCM')
-                else:
-                    try:
-                        gcm = GCMDevice.objects.get(registration_id=attrs.get('reg_id'),user_id = user.id)
-                    except GCMDevice.DoesNotExist:
-                        gcm = GCMDevice.objects.create(user=user,registration_id=attrs.get('reg_id'),device_id=attrs.get('device_id'),cloud_message_type='FCM')
-                        
+                    else:
+                        try:
+                            gcm = GCMDevice.objects.get(registration_id=attrs.get('reg_id'),user_id = user.id)
+                        except GCMDevice.DoesNotExist:
+                            gcm = GCMDevice.objects.create(user=user,registration_id=attrs.get('reg_id'),device_id=attrs.get('device_id'),cloud_message_type='FCM')
+                            
                 payload = jwt_payload_handler(user)
                 user_logged_in.send(sender=user.__class__, request=self.context.get('request'), user=user)
                 return {
