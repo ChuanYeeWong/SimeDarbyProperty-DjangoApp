@@ -97,6 +97,8 @@ class ResidentAdmin(DefaultInline):
         return obj.user.profile.phone_number
     def default_house_lot(self,obj):
         return obj.default_lot
+    def has_add_permission(self, request):
+        return False
     def process_deposit(self, request, account_id, *args, **kwargs):
         account = self.get_object(request, account_id)
         user =  get_user_model().objects.get(resident = account.pk)
