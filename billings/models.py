@@ -99,8 +99,13 @@ class Payment(models.Model):
         self.update_status(*args, **kwargs)
         super(Payment,self).save(*args, **kwargs)
     def clean(self):
-        if self.amount > self.invoices.remainder:
-            raise ValidationError("Amount is too much")
+        if self.pk is not None:
+            temp = Payment.objects.get(id=self.id)
+            if self.amount > self.invoices.remainder and self.status is not temp.status and self.status == 'S' :
+                raise ValidationError("Amount is too much")
+        else:
+            if self.amount > self.invoices.remainder:
+                raise ValidationError("Amount is too much")
     def update_status(self,*args, **kwargs):
         is_created =  self.pk is not None
         inv = self.invoices
@@ -110,7 +115,7 @@ class Payment(models.Model):
         if is_created:
             pay_id = self.pk
         for i in inv.payment_set.all():
-            if(pay_id is not None and pay_id != i.pk and i.status == 'S'):
+            if(((pay_id is not None and pay_id != i.pk )and i.status == 'S')or(pay_id is None and i.status == 'S')):
                 amt += i.amount
             else:
                 if(i.status =='P' and i.pk == pay_id and self.status != 'P' and is_pending == False):
