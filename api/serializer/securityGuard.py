@@ -53,8 +53,9 @@ class PostLogSerializer(serializers.ModelSerializer):
     def validate_longitude(self, value):
         user = self.get_current_user()
         pl = Post_Log.objects.filter(security_guard_id = user.id).order_by('-timestamp').first()
-        if pl.timestamp > (timezone.now()- timedelta(minutes=30)):
-            raise serializers.ValidationError("Please try again later.")
+        if pl:
+            if pl.timestamp > (timezone.now()- timedelta(minutes=30)):
+                raise serializers.ValidationError("Please try again later.")
         return value
 class StreetLotSerializer(serializers.ModelSerializer):
     lot_set =LotOnlySerializer(many=True,read_only=True)
