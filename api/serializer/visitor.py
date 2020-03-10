@@ -3,6 +3,7 @@ from rest_framework_jwt.compat import Serializer
 from visitors.models import Visitors,Entry_Schedule,Track_Entry
 from .resident import AreaSerializer,StreetSerializer,LotSecSerializer,ResidentSerializer,ProfileSerializer
 from residents.models import Resident,Lot
+from .securityGuard import DeviceNumberSerializer
 import uuid
 class VisitorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -81,6 +82,7 @@ class TrackEntrySerializer(serializers.ModelSerializer):
     tracker_id = serializers.IntegerField(source='id')
     phone_number = serializers.SerializerMethodField()
     resident_name = serializers.SerializerMethodField()
+    deviceNumber = DeviceNumberSerializer()
     def get_phone_number(self, obj):
         if obj.resident :
             res = Resident.objects.get(id=obj.resident.id)

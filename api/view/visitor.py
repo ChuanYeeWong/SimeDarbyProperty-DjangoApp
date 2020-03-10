@@ -25,7 +25,7 @@ class TrackEntryViewSet(viewsets.GenericViewSet):
             queryset = queryset.filter(Q(entry_type='E')|Q(entry_type='M')|Q(entry_type='S'))
         return queryset.order_by('-updated_at')
     def list (self,request):
-        queryset = self.filter_queryset(self.get_queryset());
+        queryset = self.filter_queryset(self.get_queryset())
         serializer = visitor.TrackEntrySerializer(queryset,context={'request': request},many=True)
         return Response(serializer.data)
     def retrieve(self, request, pk=None):
@@ -38,7 +38,7 @@ class TrackEntryViewSet(viewsets.GenericViewSet):
         serializer = self.serializer_class(data=request.data,context = {'request': self.request} )
         if serializer.is_valid():
             track = serializer.save()
-            t = visitor.TrackEntrySerializer(track);
+            t = visitor.TrackEntrySerializer(track)
             response_data = {'status':'success','data':t.data}
             return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
