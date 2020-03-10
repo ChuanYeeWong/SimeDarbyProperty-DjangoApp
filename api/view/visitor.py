@@ -203,6 +203,14 @@ class EntryScheduleViewSet(viewsets.GenericViewSet):
         entry = get_list_or_404(queryset,resident=self.request.user.resident.id)
         serializer = visitor.EntryScheduleSerializer(entry,context={'request': request},many=True)
         return Response(serializer.data)
+    def update(self, request, pk=None):
+        queryset = Entry_Schedule.objects.all()
+        entry = get_object_or_404(queryset, pk=pk)
+        entry.is_active = False;
+        entry.save();
+        response_data = {'status':'success'}
+        return Response(response_data, status=status.HTTP_200_OK)
+        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def destroy(self, request, pk=None):
         queryset = Entry_Schedule.objects.all()
         entry = get_object_or_404(queryset, pk=pk)

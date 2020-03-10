@@ -5,6 +5,7 @@ from .resident import AreaSerializer,StreetSerializer,LotSecSerializer,ResidentS
 from residents.models import Resident,Lot
 from .securityGuard import DeviceNumberSerializer,PassNumberSerializer
 import uuid
+import datetime
 class VisitorSerializer(serializers.ModelSerializer):
     class Meta:
         model =  Visitors
@@ -147,12 +148,27 @@ class EntryScheduleSerializer(serializers.ModelSerializer):
     area = serializers.SerializerMethodField()
     street = serializers.SerializerMethodField()
     lot_name = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
     def get_area_name(self, obj):
         if obj.resident :
             res = Lot.objects.get(id=obj.lot.id)
             return res.street.area.name
         else:
             return None
+    def get_status(self, obj):
+        if obj.is_active:
+            if (obj.start_date < datetime.datetime.now().date() and obj.entry_type != 'S'):
+                return "Expired"
+            else:
+                if obj.end_date:
+                    if obj.end_date < datetime.datetime.now().date():
+                        return "Expired"
+                    else:
+                        return "Active"
+                else:
+                    return "Active"
+        else:
+            return "Cancelled"
     def get_lot_name(self,obj):
         if obj.resident :
             res = Lot.objects.get(id=obj.lot.id)
