@@ -221,6 +221,7 @@ class EntryScheduleSerializer(serializers.ModelSerializer):
             'lot_name',
             'area',
             'street',
+            'status',
         )
         read_only_fields = ('qr_uuid','resident','id')
     def create(self,validated_data):
