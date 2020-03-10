@@ -1,5 +1,6 @@
 from django.db import models
 from residents.models import Community, Area
+from phonenumber_field.modelfields import PhoneNumberField
 class Security(models.Model):
     class Meta:
         verbose_name = "Security Guard"
@@ -39,6 +40,7 @@ class PassNumber(models.Model):
         verbose_name_plural = "Visiter Pass"
 class DeviceNumber(models.Model):
     device_no = models.CharField("Device No.",max_length=150)
+    phone_number = PhoneNumberField(null=True,blank=True)
     community =  models.ForeignKey(Community,on_delete=models.CASCADE)
     area = models.ForeignKey(Area,on_delete=models.CASCADE)
     is_active =  models.BooleanField(default=True)

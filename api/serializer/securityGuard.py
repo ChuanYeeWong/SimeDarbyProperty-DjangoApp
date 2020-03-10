@@ -109,7 +109,7 @@ class PassNumberSerializer(serializers.ModelSerializer):
 class DeviceNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceNumber
-        fields=('id','device_no',)
+        fields=('id','device_no','phone_number')
         read_only_fields = ('__all__',)
 class ResidentUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()
