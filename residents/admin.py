@@ -252,10 +252,12 @@ class RequestFamilyAdmin(admin.ModelAdmin):
     def send_email(self,status,obj,request):
         if status == 'A':
             obj.is_active = False
+            just_send = False
             try:
                 user = get_user_model().objects.get(email=obj.email)
                 r = Resident.objects.get(user_id=user.id)
             except (get_user_model().DoesNotExist, Resident.DoesNotExist) as e:
+                just_send = True
                 user = get_user_model().objects.create_user(
                     #username = obj.email,
                     email=obj.email,
