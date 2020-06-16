@@ -135,7 +135,7 @@ class VisitorViewSet(viewsets.GenericViewSet):
                                         status=status.HTTP_200_OK)
 
                     else:
-                        if entry_schedule.entry_type == 'S' and entry_schedule.start_date >= datetime.now().date() and entry_schedule.end_date <= datetime.now().date():
+                        if entry_schedule.entry_type == 'S' and entry_schedule.start_date >= datetime.now().date() and datetime.now().date() <=  entry_schedule.end_date :
                             try:
                                 tr = Track_Entry.objects.filter(entry_id=entry_schedule.id)
                             except Track_Entry.DoesNotExist:
@@ -166,7 +166,7 @@ class VisitorViewSet(viewsets.GenericViewSet):
                     #     if t.status == 'AOS' :
                     #         return Response({'status':'error'},
                     #             status=status.HTTP_400_BAD_REQUEST)
-                    
+
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
                                 status=status.HTTP_200_OK)
         return Response(serializer.errors,
