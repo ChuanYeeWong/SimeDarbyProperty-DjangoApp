@@ -167,6 +167,9 @@ class VisitorViewSet(viewsets.GenericViewSet):
                     #     if t.status == 'AOS' :
                     #         return Response({'status':'error'},
                     #             status=status.HTTP_400_BAD_REQUEST)
+                    if tr[0].status == 'AOS':
+                        return Response({'status':'error'},
+                                status=status.HTTP_406_NOT_ACCEPTABLE)
 
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
                                 status=status.HTTP_200_OK)
