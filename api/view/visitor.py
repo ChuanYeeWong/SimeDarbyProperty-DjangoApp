@@ -162,10 +162,11 @@ class VisitorViewSet(viewsets.GenericViewSet):
                 except Track_Entry.DoesNotExist:
                     tr = None
                 if tr != None:
-                    for t in tr:
-                        if t.status == 'AOS' :
-                            return Response({'status':'error'},
-                                status=status.HTTP_400_BAD_REQUEST)
+                    # for t in tr:
+                    #     if t.status == 'AOS' :
+                    #         return Response({'status':'error'},
+                    #             status=status.HTTP_400_BAD_REQUEST)
+                    
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
                                 status=status.HTTP_200_OK)
         return Response(serializer.errors,
