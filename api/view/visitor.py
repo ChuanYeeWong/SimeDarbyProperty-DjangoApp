@@ -135,7 +135,7 @@ class VisitorViewSet(viewsets.GenericViewSet):
                                         status=status.HTTP_200_OK)
 
                     else:
-                        if entry_schedule.entry_type == 'S' and entry_schedule.start_date >= datetime.now().date() and datetime.now().date() <=  entry_schedule.end_date :
+                        if entry_schedule.entry_type == 'S' and datetime.now().date()  >= entry_schedule.start_date and datetime.now().date() <=  entry_schedule.end_date :
                             try:
                                 tr = Track_Entry.objects.filter(entry_id=entry_schedule.id)
                             except Track_Entry.DoesNotExist:
