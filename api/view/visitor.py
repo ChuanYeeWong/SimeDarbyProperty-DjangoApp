@@ -163,7 +163,7 @@ class VisitorViewSet(viewsets.GenericViewSet):
                     tr = None
                 if tr != None:
                     for t in tr:
-                        if t.status != 'AOS' :
+                        if t.status == 'AOS' :
                             return Response({'status':'error'},
                                 status=status.HTTP_400_BAD_REQUEST)
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
