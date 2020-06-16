@@ -39,6 +39,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         #con = get_redis_connection("default")
         con.setex("foo",10,str(data).replace('\'','"'))
         
+        
 # def create_user_profile(sender, instance, created, **kwargs):
 #         notify = False
 #         if instance.entry is not None:
