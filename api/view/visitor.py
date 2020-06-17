@@ -164,7 +164,7 @@ class VisitorViewSet(viewsets.GenericViewSet):
                 except Track_Entry.DoesNotExist:
                     tr = None
                 if tr != None:
-                    tr[0].status = "OUT"
+                    tr[0].visitor_car_plate = "OUT"
 
                     # if(tr[0].status == "AOS"):
                     #     Track_Entry.objects.filter(pk=tr[0].tracker_id).update(status = "OUT")
