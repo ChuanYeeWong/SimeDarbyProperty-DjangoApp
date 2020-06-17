@@ -164,14 +164,15 @@ class VisitorViewSet(viewsets.GenericViewSet):
                 except Track_Entry.DoesNotExist:
                     tr = None
                 if tr != None:
-                    # for t in tr:
-                    #     if t.status == 'AOS' :
-                    #         return Response({'status':'error'},
-                    #             status=status.HTTP_400_BAD_REQUEST)
-                    # if tr[0].status == 'AOS':
-                    #     return Response({'status':'error'},
-                    #             status=status.HTTP_406_NOT_ACCEPTABLE)
+                    if(tr[0] == "AOS"):
+                        Track_Entry.objects.filter(pk=tr[0].id).update(status = "OUT")
+                        tr[0].status = "OUT"
+                        
+                    elif(tr[0] == "OUT"):
+                        Track_Entry.objects.filter(pk=tr[0].id).update(status = "OUT")
+                        tr[0].status = "OUT"
 
+                    
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
                                 status=status.HTTP_200_OK)
         return Response(serializer.errors,
