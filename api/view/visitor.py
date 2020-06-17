@@ -11,6 +11,8 @@ from datetime import datetime
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from django.db.models import Q
+import ast
+
 class TrackEntryViewSet(viewsets.GenericViewSet):
     serializer_class = visitor.TrackEntryFormSerializer
     permission_classes = [AllowAny]
@@ -135,8 +137,7 @@ class VisitorViewSet(viewsets.GenericViewSet):
                                         status=status.HTTP_200_OK)
 
                     else:
-                        if entry_schedule.entry_type == 'S' and datetime.now().date()  >= entry_schedule.start_date and datetime.now().date() <=  entry_schedule.end_date :
-                            # return Response(entry_schedule,status=status.HTTP_200_OK)
+                        if entry_schedule.entry_type == 'S' and datetime.now().date()  >= entry_schedule.start_date and datetime.now().date() <=  entry_schedule.end_date and str(datetime.now().weekday()) in ast.literal_eval(entry_schedule.days):
                             try:
                                 tr = Track_Entry.objects.filter(entry_id=entry_schedule.id)
                             except Track_Entry.DoesNotExist:
