@@ -41,6 +41,7 @@ class Track_Entry(models.Model):
         ('PEX','Pending exit'),
         ('AOS', 'Approved exit by security guard'),
         ('ROS', 'Rejected exit by security guard'),
+        ('OUT', 'Invalid repeated exit'),
     )
     ENTRY = (
         ('E', 'Single Entry'),
