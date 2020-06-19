@@ -165,13 +165,13 @@ class VisitorViewSet(viewsets.GenericViewSet):
                     tr = None
                 if tr != None:
 
-                    # if(tr[0].status == "AOS"):
-                    #     Track_Entry.objects.filter(pk=tr[0].tracker_id).update(status = "OUT")
-                    #     tr[0].status = "OUT"
+                    if(tr[0].status == "AOS"):
+                        return Response(visitor.TrackEntrySerializer(tr[0]).data,
+                                status=status.HTTP_226_IM_USED)
 
-                    # elif(tr[0].status == "OUT"):
-                    #     Track_Entry.objects.filter(pk=tr[0].tracker_id).update(status = "OUT")
-                    #     tr[0].status = "OUT"
+                    elif(tr[0].status == "OUT"):
+                        return Response(visitor.TrackEntrySerializer(tr[0]).data,
+                                status=status.HTTP_226_IM_USED)
 
                     
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
