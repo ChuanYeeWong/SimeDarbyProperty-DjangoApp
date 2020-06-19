@@ -165,26 +165,24 @@ class VisitorViewSet(viewsets.GenericViewSet):
                     tr = None
                 if tr != None:
                     if(tr[0].entry_type == "E"):
-                        if(tr[0].status == "AOS"):
+                        if(tr[0].status == "AOS" or tr[0].status == "OUT"):
                             return Response(visitor.TrackEntrySerializer(tr[0]).data,
                                     status=status.HTTP_226_IM_USED)
 
-                        elif(tr[0].status == "OUT"):
-                            return Response(visitor.TrackEntrySerializer(tr[0]).data,
-                                    status=status.HTTP_226_IM_USED)
                     elif(tr[0].entry_type == "M" and entry_schedule.start_date != datetime.now().date()):
                             return Response(visitor.TrackEntrySerializer(tr[0]).data,
-                                                                status=status.HTTP_226_IM_USED)
+                                    status=status.HTTP_226_IM_USED)
+
                     elif(tr[0].entry_type == "S"):
                         if(datetime.now().date()  < entry_schedule.start_date):
                             return Response(visitor.TrackEntrySerializer(tr[0]).data,
-                                                                status=status.HTTP_226_IM_USED)
+                                    status=status.HTTP_226_IM_USED)
                         elif(datetime.now().date() >  entry_schedule.end_date):
                             return Response(visitor.TrackEntrySerializer(tr[0]).data,
-                                                                status=status.HTTP_226_IM_USED)
-                        elif(datetime.now().date()  >= entry_schedule.start_date and datetime.now().date() <=  entry_schedule.end_date and str(datetime.now().weekday()) not in ast.literal_eval(entry_schedule.days):
+                                    status=status.HTTP_226_IM_USED)
+                        elif(datetime.now().date()  >= entry_schedule.start_date and datetime.now().date() <=  entry_schedule.end_date and str(datetime.now().weekday()) not in ast.literal_eval(entry_schedule.days)):
                             return Response(visitor.TrackEntrySerializer(tr[0]).data,
-                                                                status=status.HTTP_226_IM_USED)
+                                    status=status.HTTP_226_IM_USED)
             
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
                                 status=status.HTTP_200_OK)
