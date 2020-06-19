@@ -164,14 +164,14 @@ class VisitorViewSet(viewsets.GenericViewSet):
                 except Track_Entry.DoesNotExist:
                     tr = None
                 if tr != None:
+                    if(tr[0].entry_type == "E"):
+                        if(tr[0].status == "AOS"):
+                            return Response(visitor.TrackEntrySerializer(tr[0]).data,
+                                    status=status.HTTP_226_IM_USED)
 
-                    if(tr[0].status == "AOS"):
-                        return Response(visitor.TrackEntrySerializer(tr[0]).data,
-                                status=status.HTTP_226_IM_USED)
-
-                    elif(tr[0].status == "OUT"):
-                        return Response(visitor.TrackEntrySerializer(tr[0]).data,
-                                status=status.HTTP_226_IM_USED)
+                        elif(tr[0].status == "OUT"):
+                            return Response(visitor.TrackEntrySerializer(tr[0]).data,
+                                    status=status.HTTP_226_IM_USED)
 
                     
                     return Response(visitor.TrackEntrySerializer(tr[0]).data,
