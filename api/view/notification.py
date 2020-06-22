@@ -30,13 +30,18 @@ class NotificationViewSet(viewsets.ViewSet):
         return Response({'count':len(r)},
                             status=status.HTTP_200_OK)
     def update(self, request, pk=None):
-        queryset = Notification.objects.all()
-        track = get_object_or_404(queryset, pk=pk)
-        serializer = notification.NotificationSerializer(track, data=request.data,context = {'request': self.request},partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            response_data = {'status':'success'}
+        response_data = {'status':'success'}
+        newPk = pk[:2]
+        if(newPk  == 'id'):
+            Notification.objects.filter(object_id=pk[2:]).update(is_read = 1)
             return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            queryset = Notification.objects.all()
+            track = get_object_or_404(queryset, pk=pk)
+            serializer = notification.NotificationSerializer(track, data=request.data,context = {'request': self.request},partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(response_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     @action(detail=False, methods=['delete'])      
     def destroyAll(self, request):
