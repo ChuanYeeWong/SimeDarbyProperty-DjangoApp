@@ -32,8 +32,8 @@ import redis
 #                 data = {"data_type":"track","track_id":instance.id, "status":instance.status,"lot":instance.lot.id,"area":instance.area.id,"resident":instance.resident.user.id , 'noti_id':id}
 #         else:
 #                 data = {"data_type":"track","track_id":instance.id, "status":instance.status,"lot":0,"area":instance.area.id,"resident":0, 'noti_id':id}
-#         con = redis.StrictRedis(host='vmswebcache.redis.cache.windows.net',
-#         port=6380, db=0, password='IsF++8DTZ01nNN3Ec5b5FS9xxoZYRD4Qs+UvG6FB5ew=', ssl=True)
+#         con = redis.StrictRedis(host='vmsnodejsweb.redis.cache.windows.net',
+#         port=6380, db=0, password='PC1LvfxeuRX1gcviQV329F30Gg0tFEihJPOPTaRzLt8=', ssl=True)
 #         #con = get_redis_connection("default")
 #         con.setex("foo",10,str(data).replace('\'','"'))
 #         if created:
@@ -57,8 +57,8 @@ def create_user_profile(sender, instance, created, **kwargs):
                 data = {"data_type":"track","track_id":instance.id, "status":instance.status,"lot":instance.lot.id,"area":instance.area.id,"resident":instance.resident.user.id}
         else:
                 data = {"data_type":"track","track_id":instance.id, "status":instance.status,"lot":0,"area":instance.area.id,"resident":0}
-        con = redis.StrictRedis(host='vmswebcache.redis.cache.windows.net',
-        port=6380, db=0, password='IsF++8DTZ01nNN3Ec5b5FS9xxoZYRD4Qs+UvG6FB5ew=', ssl=True)
+        con = redis.StrictRedis(host='vmsnodejsweb.redis.cache.windows.net',
+        port=6380, db=0, password='PC1LvfxeuRX1gcviQV329F30Gg0tFEihJPOPTaRzLt8=', ssl=True)
         #con = get_redis_connection("default")
         con.setex("foo",10,str(data).replace('\'','"'))
         if created:

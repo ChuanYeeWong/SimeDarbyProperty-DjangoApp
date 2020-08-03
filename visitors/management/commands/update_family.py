@@ -32,7 +32,7 @@ class Command(BaseCommand):
                     
                     data = {"data_type":"update","track_id":t.id, "status":t.status,"lot":0,"area":t.area.id,"resident":rlt.resident.user.id}
                     #con = get_redis_connection("default")
-                    con = redis.StrictRedis(host='vmswebcache.redis.cache.windows.net',
-        port=6380, db=0, password='IsF++8DTZ01nNN3Ec5b5FS9xxoZYRD4Qs+UvG6FB5ew=', ssl=True)
+                    con = redis.StrictRedis(host='vmsnodejsweb.redis.cache.windows.net',
+        port=6380, db=0, password='PC1LvfxeuRX1gcviQV329F30Gg0tFEihJPOPTaRzLt8=', ssl=True)
                     con.setex("foo",10,str(data).replace('\'','"'))
 
